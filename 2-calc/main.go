@@ -24,32 +24,36 @@ func main() {
 	}
 }
 
-func operation(sl []int) {
+func operation(sl []float64) {
 	var mg string
 	for {
 		fmt.Print("Введите операцию (AVG/SUM/MED): ")
 		fmt.Scanln(&mg)
 		switch mg {
 		case "AVG":
-			var res int
-			var sum int
+			var res float64
+			var sum float64
 			for _, x := range sl {
 				sum += x
 			}
-			res = sum / len(sl)
-			fmt.Println("Среднее значение списка чисел: ", res)
+			res = sum / float64(len(sl))
+			fmt.Printf("Среднее значение списка чисел: %.2f \n", res)
 
 		case "SUM":
-			var sum int
+			var sum float64
 			for _, x := range sl {
 				sum += x
 			}
 			fmt.Println("Сумма чисел: ", sum)
 		case "MED":
-			var res int
-			sort.Ints(sl)
-			res = sl[len(sl)/2]
-			fmt.Println("Медиана чисел: ", res)
+			var res float64
+			sort.Float64s(sl)
+			if len(sl)%2 == 0 {
+				res = (sl[len(sl)/2] + sl[len(sl)/2-1]) / 2
+			} else {
+				res = sl[len(sl)/2]
+			}
+			fmt.Printf("Медиана чисел: %.2f \n", res)
 		default:
 			fmt.Println("\033[31mОперация введена неверно, попробуйте её раз.\033[0m")
 			continue
@@ -63,14 +67,14 @@ func operation(sl []int) {
 	}
 }
 
-func numbers() []int {
+func numbers() []float64 {
 	var s string
-	numSlice := make([]int, 0)
+	numSlice := make([]float64, 0)
 	fmt.Print("Введите числа через запятую: ")
 	fmt.Scanln(&s)
 	strSlice := strings.Split(s, ",")
 	for _, str := range strSlice {
-		conv, err := strconv.Atoi(str)
+		conv, err := strconv.ParseFloat(str, 64)
 		if err != nil {
 			fmt.Println(err)
 		}
