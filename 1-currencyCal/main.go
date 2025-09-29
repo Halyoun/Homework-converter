@@ -9,11 +9,14 @@ const usdToRub = 83.59
 const eurToRub = usdToRub / usdToEur
 
 type converterMap map[string]map[string]float64
+type currencyMap map[string]map[string]float64
 
 func main() {
 	fmt.Println("\033[32m---Добро пожаловать в конвертор валют!---\033[0m")
 	for {
 		var mg string
+		currMap := make(currencyMap)
+
 		res, err := convertOper(userInput())
 		if err != nil {
 			fmt.Println("Ошибка:", err)
