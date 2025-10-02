@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -9,10 +8,15 @@ const usdToEur = 0.8514
 const usdToRub = 83.59
 const eurToRub = usdToRub / usdToEur
 
+type converterMap map[string]map[string]float64
+type currencyMap map[string]map[string]float64
+
 func main() {
 	fmt.Println("\033[32m---Добро пожаловать в конвертор валют!---\033[0m")
 	for {
 		var mg string
+		currMap := make(currencyMap)
+
 		res, err := convertOper(userInput())
 		if err != nil {
 			fmt.Println("Ошибка:", err)
@@ -35,16 +39,24 @@ func userInput() (float64, string, string) {
 	var curr2 string
 	for {
 		fmt.Print("Введите валюту, из которой будет конвертация (usd/eur/rub): ")
-		fmt.Scanln(&curr1)
+		_, err := fmt.Scanln(&curr1)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
 		if curr1 != "usd" && curr1 != "eur" && curr1 != "rub" {
-			fmt.Println("Ошибка ввода")
+			fmt.Println("Ошибка ввода, попробуйте ещё")
 			continue
 		}
 		break
 	}
 	for {
 		fmt.Print("Введите сумму конвертации: ")
-		fmt.Scanln(&sum)
+		_, err := fmt.Scanln(&sum)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
 		if sum <= 0 {
 			fmt.Println("Введено число меньше нуля или ноль")
 			continue
@@ -63,9 +75,13 @@ func userInput() (float64, string, string) {
 		default:
 			continue
 		}
-		fmt.Scanln(&curr2)
+		_, err := fmt.Scanln(&curr2)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
 		if curr2 != "usd" && curr2 != "eur" && curr2 != "rub" || curr2 == curr1 {
-			fmt.Println("Ошибка ввода")
+			fmt.Println("Ошибка ввода, попробуйте ещё")
 			continue
 		}
 		break
@@ -74,20 +90,10 @@ func userInput() (float64, string, string) {
 }
 
 func convertOper(sum float64, curr1 string, curr2 string) (float64, error) {
-	switch {
-	case curr1 == "usd" && curr2 == "eur":
-		return sum * usdToEur, nil
-	case curr1 == "usd" && curr2 == "rub":
-		return sum * usdToRub, nil
-	case curr1 == "eur" && curr2 == "rub":
-		return sum * eurToRub, nil
-	case curr1 == "eur" && curr2 == "usd":
-		return sum * (1 / usdToEur), nil
-	case curr1 == "rub" && curr2 == "usd":
-		return sum * (1 / usdToRub), nil
-	case curr1 == "rub" && curr2 == "eur":
-		return sum * (1 / eurToRub), nil
-	default:
-		return 0.0, errors.New("данные введены неверно")
+	converter := converterMap{
+		"usd": {"eur": usdToEur, "rub": usdToRub},
+		"eur": {"rub": eurToRub, "usd": 1 / usdToEur},
+		"rub": {"usd": 1 / usdToRub, "eur": 1 / eurToRub},
 	}
+	return sum * converter[curr1][curr2], nil
 }
