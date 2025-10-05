@@ -6,22 +6,29 @@ import (
 )
 
 type Bin struct {
-	Id        string
-	Private   bool
-	CreatedAt time.Time
-	Name      string
+	Id        string    `json:"id"`
+	Private   bool      `json:"private"`
+	CreatedAt time.Time `json:"createdAt"`
+	Name      string    `json:"name"`
 }
 
-func NewBin(binList *[]Bin) {
+type BinList struct {
+	Bins      []Bin     `json:"bins"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+func (list *BinList) NewBin() {
 	bin := Bin{}
-	promptData("Введите id: ", &bin.Id)
-	promptData("Задайте приватность (true/false): ", &bin.Private)
-	promptData("Введите имя: ", &bin.Name)
+	PromptData("Введите id: ", &bin.Id)
+	PromptData("Задайте приватность (true/false): ", &bin.Private)
+	PromptData("Введите имя: ", &bin.Name)
 	bin.CreatedAt = time.Now()
-	*binList = append(*binList, bin)
+	list.Bins = append(list.Bins, bin)
+	list.UpdatedAt = time.Now()
+	WriteJSON()
 }
 
-func promptData(s string, p any) {
+func PromptData(s string, p any) {
 	fmt.Print(s)
 	fmt.Scanln(p)
 }
