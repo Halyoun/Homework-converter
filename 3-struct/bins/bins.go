@@ -1,7 +1,10 @@
 package bins
 
 import (
+	"app-3/file"
+	"encoding/json"
 	"fmt"
+	"github.com/fatih/color"
 	"time"
 )
 
@@ -25,7 +28,29 @@ func (list *BinList) NewBin() {
 	bin.CreatedAt = time.Now()
 	list.Bins = append(list.Bins, bin)
 	list.UpdatedAt = time.Now()
-	WriteJSON()
+}
+
+func (list *BinList) ScanJson(name string) {
+	data, err := file.ReadJson(name)
+	err = json.Unmarshal(data, &list)
+	if err != nil {
+		color.Red("Файл не является json или не удалось преобразовать!")
+		return
+	}
+}
+
+func (list *BinList) PrintJson() {
+	fmt.Println("\033[31m---- Список бинов ----\033[m")
+	for _, bin := range list.Bins {
+		fmt.Println("\033[32m---------------------------\033[m")
+		fmt.Println("ID: ", bin.Id)
+		fmt.Println("Name: ", bin.Name)
+		fmt.Println("Created at: ", bin.CreatedAt)
+		fmt.Println("Private: ", bin.Private)
+
+	}
+	fmt.Println("\033[32m---------------------------\033[m")
+	fmt.Println("\033[31mПоследнее обновление: \033[m", list.UpdatedAt)
 }
 
 func PromptData(s string, p any) {

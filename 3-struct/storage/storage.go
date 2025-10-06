@@ -2,16 +2,15 @@ package storage
 
 import (
 	"app-3/bins"
-	"app-3/file"
 	"encoding/json"
 	"github.com/fatih/color"
 	"os"
 )
 
 func SaveJson(name string, bins bins.BinList) {
-	file, err := os.OpenFile(name, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
+	file, err := os.Create(name)
 	if err != nil {
-		color.Red("Ошибка файла!\n")
+		color.Red("Ошибка создания/открытия файла!\n")
 		return
 	}
 	defer file.Close()
@@ -29,8 +28,4 @@ func SaveJson(name string, bins bins.BinList) {
 	}
 
 	color.Green("Данные записаны успешно!\n")
-}
-
-func ScanJson(name string) *bins.BinList {
-	return file.ReadJson(name)
 }
