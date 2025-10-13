@@ -1,7 +1,9 @@
 package main
 
 import (
+	"app-3/api"
 	"app-3/bins"
+	"app-3/config"
 	"app-3/storage"
 	"fmt"
 )
@@ -9,6 +11,7 @@ import (
 func main() {
 	BinList := bins.BinList{}
 	var mg string
+	fmt.Println(api.GetKey(config.NewConfig("Key.env")))
 	fmt.Println("---Менеджер бинов---")
 Menu:
 	for {

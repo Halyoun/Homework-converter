@@ -31,7 +31,7 @@ func (list *BinList) NewBin() {
 }
 
 func (list *BinList) ScanJson(name string) {
-	data, err := file.ReadJson(name)
+	data, err := file.Read(name)
 	err = json.Unmarshal(data, &list)
 	if err != nil {
 		color.Red("Файл не является json или не удалось преобразовать!")

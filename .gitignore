@@ -1,3 +1,7 @@
+app-3
+data.json
+.env*
+*.env
 MyText.txt
 Homework-converter
 .DS_Store
