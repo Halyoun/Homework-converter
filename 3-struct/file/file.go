@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func ReadJson(name string) ([]byte, error) {
+func Read(name string) ([]byte, error) {
 	data, err := os.ReadFile(name)
 	if err != nil {
 		color.Red("Файл не найден! \n")
